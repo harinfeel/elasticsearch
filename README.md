@@ -14,7 +14,7 @@ Python: 3.x
 ansible-playbook -i hosts inst_es.yml -t elasticsearch
 ```
 
-* Gitlab: [@dmlee01](https://sed-gitlab.hanpda.com/dmlee01/OAUTH.git)
+* Gitlab: [@harin](https://github.com/harinfeel/elasticsearch.git)
 
 ## Show your support
 

@@ -1,0 +1,17 @@
+---
+- name: Check Elasticsearch | Check directory "{{ def_path }}/elasticsearch"
+  stat: 
+    path: "{{ def_path }}/elasticsearch"
+  register: chk_rb_dir_es
+
+- name: Check Elasticsearch | Check backup directory "{{ def_path }}/elasticsearch.{{ date_time }}"
+  stat: 
+    path: "{{ def_path }}/elasticsearch.{{ date_time }}"
+  register: chk_rb_bck_es
+
+- name: Check Elasticsearch | Check ps elasticsearch
+  shell: |
+    export chkEs=$(ps -eo cmd | grep {{ def_path }}/elasticsearch | grep -v grep)
+    echo $chkEs
+  register: chk_rb_ps_es
+  changed_when: false

@@ -1,0 +1,6 @@
+---   
+- name: rclocal | Set rc.local elasticsearch
+  replace: 
+    dest: "/etc/rc.d/rc.local" 
+    regexp: "\n# elasticsearch start(.*)\n/etc/init.d/elasticsearchd start\n"
+    replace: ""

@@ -1,0 +1,12 @@
+--- 
+- name: Backup /etc/sysctl.conf, /etc/security/limits.conf
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    force: yes
+    owner: root
+    group: root
+    remote_src: true
+  with_items:
+    - { src: "/etc/sysctl.conf.{{ date_time }}", dest: "/etc/sysctl.conf" }
+    - { src: "/etc/security/limits.conf.{{ date_time }}", dest: "/etc/security/limits.conf" }

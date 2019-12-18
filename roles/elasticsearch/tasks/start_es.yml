@@ -1,0 +1,7 @@
+- name: Start elasticsearch
+  shell: |
+    echo "start elasticsearchd"
+  notify: "start elasticsearchd"
+    
+- name: Start elasticsearch
+  meta: flush_handlers

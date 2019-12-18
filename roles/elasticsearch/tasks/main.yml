@@ -1,0 +1,61 @@
+---
+- block:
+    - name: Check info
+      include: chk_es.yml
+      tags: ['set_es', 'rb_es']
+    
+    - name: Elasticsearch Handler
+      include: stop_es.yml
+      when: chk_ps_es.stdout | length > 0 and chk_init_es.stat.exists == True
+      tags: ['set_es', 'stop_es']
+
+    - name: Backup Elasticsearch
+      include: backup_es.yml
+      tags: ['set_es', 'backup_es']
+
+    - name: Create user elasticsearch-s
+      include: create_user_es.yml
+      tags: ['set_es', 'create_user_es']
+
+    - name: Download Elasticsearch
+      include: down_es.yml
+      tags: ['set_es', 'down_es']
+
+    - name: Install es
+      include: install_es.yml
+      tags: ['set_es', 'install_es']
+
+    - name: Setup /etc/sysctl.conf
+      include: set_sysctl_es.yml
+      tags: ['set_es', 'set_sysctl_es']
+
+    - name: Start elasticsearch
+      include: start_es.yml
+      tags: ['set_es', 'start_es']
+
+    - name: Setup /etc/rc.d/rc.local
+      include: set_rclocal_es.yml
+      tags: ['set_es', 'set_rclocal_es']
+
+  rescue:
+    - name: Rollback es | Check es status
+      include: chk_rb_es.yml
+      tags: ['rb_es']
+  
+    - name: Stop elasticsearch
+      include: stop_es.yml
+      when: chk_rb_ps_es.stdout | length > 0 and chk_init_es.stat.exists == True
+      tags: ['rb_es','stop_rb_es']
+      
+    - name: Rollback es | Elasticsearch Handler
+      include: rb_es.yml
+      tags: ['rb_es', 'rb_es']
+        
+    - name: Start elasticsearch
+      include: start_es.yml
+      when: chk_ps_es.stdout | length > 0  and chk_init_es.stat.exists == True
+      tags: ['rb_es', 'start_rb_es']
+
+    - name: Backup /etc/rc.d/rc.local
+      include: rb_rclocal_es.yml
+      tags: ['rb_es', 'rb_rclocal_es']

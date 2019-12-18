@@ -1,0 +1,17 @@
+- name: Backup elasticsearch
+  shell: | 
+    mv -v {{ def_path }}/elasticsearch{,.{{ date_time }}}
+  when:  chk_dir_es.stat.exists == True and chk_bck_dir_es.stat.exists == False
+
+- name: Backup /etc/rc.d/rc.local, /etc/sysctl.conf, /etc/security/limits.conf
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    force: no
+    owner: root
+    group: root
+    remote_src: true 
+  with_items:
+    - { src: "/etc/rc.d/rc.local", dest: "/etc/rc.d/rc.local.{{ date_time }}" }
+    - { src: "/etc/sysctl.conf", dest: "/etc/sysctl.conf.{{ date_time }}" }
+    - { src: "/etc/security/limits.conf", dest: "/etc/security/limits.conf.{{ date_time }}" }

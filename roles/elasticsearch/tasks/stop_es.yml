@@ -1,0 +1,8 @@
+---
+- name: Stop elasticsearch
+  shell: |
+    echo "stop elasticsearchd"
+  notify: "stop elasticsearchd"
+    
+- name: Stop elasticsearch
+  meta: flush_handlers

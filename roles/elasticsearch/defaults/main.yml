@@ -1,0 +1,21 @@
+---
+# Legacy date/time info
+date_time: "{{ '%Y%m%d' | strftime }}"
+
+# Local date/time info
+local_date: "{{ '%Y-%m-%d' | strftime }}"
+local_time: "{{ '%H:%M:%S' | strftime }}"
+local_date_time: "{{ '%Y-%m-%d %H:%M:%S' | strftime }}"
+
+def_path: /home/app
+tmp_path: /home/tmp
+build_path: "{{ tmp_path }}/build"
+es_url: "https://artifacts.elastic.co/downloads/elasticsearch"
+zulu_url: "https://cdn.azul.com/zulu/bin"
+
+elasticsearch_version: "elasticsearch-6.8.5"
+zulu_version: "zulu11.35.15-ca-jdk11.0.5-linux_x64"
+
+data_dir: "/data/elasticsearch"
+data2_dir: "/data-2/elasticsearch"
+home_data_dir: "{{ def_path }}/elasticsearch-data"

@@ -1,0 +1,17 @@
+[es_main:children]
+prod
+qa
+dev
+
+[prod]
+prod_node1
+prod_node2
+prod_node3
+[qa]
+qa_node1
+qa_node2
+qa_node3
+[dev]
+dev_node1
+dev_node2
+dev_node3

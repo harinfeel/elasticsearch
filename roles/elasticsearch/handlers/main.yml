@@ -1,0 +1,8 @@
+- name: stop elasticsearchd
+  command: /etc/init.d/elasticsearchd stop
+
+- name: start elasticsearchd
+  command: /etc/init.d/elasticsearchd start
+
+- name: restart elasticsearchd
+  command: /etc/init.d/elasticsearchd restart

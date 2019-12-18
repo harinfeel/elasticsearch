@@ -1,0 +1,11 @@
+---
+- name: Rollback es | Remove elasticsearch
+  file:
+    path: "{{ def_path }}/elasticsearch"
+    state: absent
+  when: (chk_rb_bck_es.stat.exists == True and chk_dir_es.stat.exists == True) or (chk_dir_es.stat.exists == False and chk_rb_bck_es.stat.exists == False)
+
+- name: Rollback es | Move elasticsearch
+  shell: |
+    mv -v {{ def_path }}/elasticsearch.{{ date_time }} {{ def_path }}/elasticsearch
+  when: chk_rb_bck_es.stat.exists == True

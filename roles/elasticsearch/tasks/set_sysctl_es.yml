@@ -1,0 +1,31 @@
+---
+- name: Set /etc/security/limits.conf
+  lineinfile:
+    dest: "{{ item.dest }}"
+    line: "{{ item.line }}"
+    state: "present"
+    insertafter: EOF
+  with_items:
+    - { dest: "/etc/security/limits.conf", line: '# Set elasticsearch' } 
+    - { dest: "/etc/security/limits.conf", line: 'elasticsearch-s    -       nofile          65536' } 
+    - { dest: "/etc/security/limits.conf", line: 'elasticsearch-s    -       nproc           4096' }
+    - { dest: "/etc/security/limits.conf", line: 'elasticsearch-s    soft    memlock         unlimited' }
+    - { dest: "/etc/security/limits.conf", line: 'elasticsearch-s    hard    memlock         unlimited' }
+
+- name: sysctl
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    sysctl_file: /etc/sysctl.conf
+    reload: "{{ item.reload }}"
+    ignoreerrors: yes
+  with_items:
+    - { name: "vm.swappiness", value: "1", reload: "no" }
+    - { name: "vm.max_map_count", value: "262144", reload: "no" }
+    - { name: "fs.file-max", value: "262144", reload: "yes" }
+
+- name: Set noop
+  shell: |
+    echo "noop" > /sys/block/sda/queue/scheduler 
+  when: chk_disk.stdout | length == 0

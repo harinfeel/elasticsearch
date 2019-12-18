@@ -1,0 +1,43 @@
+---
+- name: Install | Unarchive "{{ def_path }}/elasticsearch"
+  unarchive:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "elasticsearch-s"
+    group: "elasticsearch-s"
+    extra_opts: [--strip-components=2]
+    remote_src: True
+  with_items:
+    - src: "{{ build_path }}/{{ elasticsearch_version }}.tar.gz"
+      dest: "{{ def_path }}/elasticsearch"
+
+- name: Install | Unarchive "{{ def_path }}/elasticsearch"
+  unarchive:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "elasticsearch-s"
+    group: "elasticsearch-s"
+    extra_opts: [--strip-components=1]
+    remote_src: True
+  with_items:
+    - src: "{{ build_path }}/{{ zulu_version }}.tar.gz"
+      dest: "{{ def_path }}/elasticsearch/jdk"
+
+- name: Install | Set configuration
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+    owner: "elasticsearch-s"
+    group: "elasticsearch-s"
+  with_items:
+    - { src: "elasticsearch.yml.j2", dest: "{{ def_path }}/elasticsearch/config/elasticsearch.yml", mode: "0600" }
+    - { src: "jvm.options.j2", dest: "{{ def_path }}/elasticsearch/config/jvm.options", mode: "0600" }
+    - { src: "elasticsearchd.j2", dest: "/etc/rc.d/init.d/elasticsearchd", mode: "0700"}
+
+- name: Install | Set env
+  lineinfile:
+    dest: "{{ def_path}}/elasticsearch/bin/elasticsearch-env"
+    line: "JAVA_HOME=/home/apps/elasticsearch/jdk"
+    state: "present"
+    insertbefore: "# now set the path to java"

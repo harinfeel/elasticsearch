@@ -1,0 +1,6 @@
+---
+- name: Set rc.local
+  lineinfile:
+    dest: "/etc/rc.d/rc.local"
+    line: "\n# elasticsearch start\n/etc/init.d/elasticsearchd start"
+    state: "present"

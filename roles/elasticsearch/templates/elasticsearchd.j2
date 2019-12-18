@@ -1,0 +1,88 @@
+#! /bin/bash
+### BEGIN INIT INFO
+# Provides:          elasticsearch
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts elasticsearch
+### END INIT INFO
+
+# You may need to change these
+USER=elasticsearch-s         # the user you used to run the elastic search install command
+JAVA_HOME=/home/app/elasticsearch/jdk   # Where java lives
+
+### BEGIN user-configurable settings
+NAME=elasticsearch-s
+DESC=elasticsearch-s
+ES_HOME=/home/app/elasticsearch
+PID_FILE=$ES_HOME/$NAME.pid
+DAEMON=$ES_HOME/bin/elasticsearch
+### END user-configurable settings
+
+
+# Pull in RHEL/CentOS-specific functionality (daemon, killproc) if available.
+if [ -x /etc/init.d/functions ]; then source /etc/init.d/functions; fi
+
+# Exit if the executable is missing.
+if [ ! -x $DAEMON ]; then
+  echo 'Could not find elasticsearch executable!'
+  exit 0
+fi
+
+# Exit if any command (outside a conditional) fails.
+set -e
+
+
+case "$1" in
+  start)
+    echo -n "Starting $DESC: "
+    runuser -s /bin/bash $USER -c "$DAEMON -p $PID_FILE -d "
+
+    if [ $? == 0 ]
+    then
+        echo "started."
+    else
+        echo "failed."
+    fi
+    ;;
+  stop)
+    if [ ! -e $PID_FILE ]; then
+      echo "$DESC not running (no PID file)"
+    else
+      echo -n "Stopping $DESC: "
+      kill $(cat $PID_FILE)
+      rm $PID_FILE
+
+      if [ $? == 0 ]
+      then
+          echo "stopped."
+      else
+          echo "failed."
+      fi
+    fi
+    ;;
+  restart|force-reload)
+    ${0} stop
+    sleep 0.5
+    ${0} start
+    ;;
+  status)
+    if [ ! -f $PID_FILE ]; then
+      echo "$DESC not running"
+    else
+      if ps auxw | grep $(cat $PID_FILE) | grep -v grep > /dev/null; then
+        echo "running on pid $(cat $PID_FILE)"
+      else
+        echo 'not running (but PID file exists)'
+      fi
+    fi
+    ;;
+  *)
+    N=/etc/init.d/$NAME
+    echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

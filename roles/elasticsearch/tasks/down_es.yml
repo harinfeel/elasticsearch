@@ -1,0 +1,8 @@
+---
+- name: Install | Download build-package.
+  get_url:
+    url: "{{ item }}"
+    dest: "{{ build_path }}"
+  with_items:
+    - "{{ es_url }}/{{ elasticsearch_version }}.tar.gz"
+    - "{{ zulu_url }}/{{ zulu_version }}.tar.gz"

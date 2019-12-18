@@ -1,0 +1,49 @@
+- name: Install | Create elasticsearch-s group
+  group:
+    name: "elasticsearch-s"
+    state: present
+    gid: 2000
+    
+- name: Install | Create elasticsearch-s user
+  user:
+    name: "elasticsearch-s"
+    shell: "/sbin/nologin"
+    home: "{{ def_path }}/elasticsearch"
+    group: "elasticsearch-s"
+    uid: 2000
+    create_home: yes
+
+- name: Install | Create directory sbox
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: elasticsearch-s
+    group: elasticsearch-s
+    mode: "0700"
+  with_items:
+    - "{{ def_path }}/elasticsearch/jdk"
+    - "{{ home_data_dir }}"
+    - "{{ home_data_dir }}/logs"
+    - "{{ home_data_dir }}/tmp"
+  when: '"qa" in group_names'
+
+- name: Install | Create directory prod
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: elasticsearch-s
+    group: elasticsearch-s
+    mode: "0700"
+  with_items:
+    - "{{ def_path }}/elasticsearch/jdk"
+    - "{{ data_dir }}"
+    - "{{ data_dir }}/logs"
+    - "{{ data_dir }}/tmp"
+    - "{{ data2_dir }}/elasticsearch"
+  when: '"prod" in group_names'
+
+- name: shell change owner
+  shell: |
+    chown -R elasticsearch-s.elasticsearch-s {{ data_dir }} {{ data2_dir }}
+  ignore_errors: true
+  changed_when: false 

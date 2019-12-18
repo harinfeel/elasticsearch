@@ -1,0 +1,41 @@
+---
+- name: Check | Check directory "{{ def_path }}/elasticsearch"
+  stat: 
+    path: "/etc/rc.d/init.d/elasticsearchd"
+  register: chk_init_es
+
+- name: Check | Check directory "{{ def_path }}/elasticsearch"
+  stat: 
+    path: "{{ def_path }}/elasticsearch"
+  register: chk_dir_es
+
+- name: Check | Check backup directory "{{ def_path }}/elasticsearch"
+  stat: 
+    path: "{{ def_path }}/elasticsearch.{{ date_time }}"
+  register: chk_bck_dir_es
+
+- name: Check | Check backup directory "{{ def_path }}/elasticsearch"
+  stat: 
+    path: "{{ def_path }}/elasticsearch.{{ date_time }}"
+  register: chk_bck_rclocal
+
+- name: Check | Check ps elasticsearch
+  shell: |
+    export chkEs=$(ps -eo cmd | grep {{ def_path }}/elasticsearch | grep -v grep)
+    echo $chkEs
+  register: chk_ps_es
+  changed_when: false
+
+- name: Check | grep elasticsearch
+  shell: |
+    export chkRclocal=$(grep -R /etc/init.d/elasticsearchd /etc/rc.d/rc.local)
+    echo $chkRclocal
+  register: chk_rclocal
+  changed_when: false
+
+- name: Check | grep elasticsearch
+  shell: |
+    export chkDisk=$(ls /sys/block/ | grep vd)
+    echo $chkDisk
+  register: chk_disk
+  changed_when: false

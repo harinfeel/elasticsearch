@@ -14,7 +14,7 @@ Python: 3.x
 ansible-playbook -i hosts inst_es.yml -t elasticsearch
 ```
 
-* Gitlab: [@harin](https://github.com/harinfeel/elasticsearch.git)
+* Github: [@harin](https://github.com/harinfeel/elasticsearch.git)
 
 ## Show your support
 
